@@ -162,9 +162,6 @@ function renderThread( url ) {
             }
         });
 
-
-        $thread.find('br').remove();
-
         $thread.find('div.post').addClass('well well-small');
         $('#thread-title').text(title);
         //$('.modal-body').append($thread);
