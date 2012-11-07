@@ -22,3 +22,13 @@ font-size: 15px;
 #threads {
     font-size: 14px;
 }
+
+#reply-form-wrapper form {
+    padding: 15px;
+}
+
+#reply-form-wrapper textarea {
+    width:400px;
+    height:90px;
+    margin-bottom:0;
+}

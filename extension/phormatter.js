@@ -32,8 +32,10 @@ $(document).ready(function() {
 
     //refresh page
 
+
     $(document).keydown(function(event) {
-          if (event.which == 32) {
+
+          if (event.which == 32 && event.target.type != 'textarea') {
              event.preventDefault();
              console.log("space pressed");
              getThreads();
@@ -51,6 +53,8 @@ $(document).ready(function() {
         event.preventDefault();
         getMyThreads();
     });
+
+
 
 
 
@@ -95,56 +99,79 @@ function parseThreads( threads ) {
         event.preventDefault();
         var $clicked = $(this);
         var populated = $clicked.data('populated');
-
-        var title = $(this).text();
         var url = $(this).attr('href');
         console.log(url);
-        window.scrollTo(0, 0);
-        $('#thread-wrapper').hide();
-        $.get(url, function( response ) {
-            var $thread = $(response).find('#boards_ajax_container');
-            $thread.find('div.topic_header, span.post_tools, div.posts_footer').remove();
-            var $names = $thread.find('span.poster_name');
-            $names.html(function(index, html) {
-                return html.replace('»', '');
-            });
-            // links to images
-            $thread.find("a[href$='.png'], a[href$='.jpg'], a[href$='.tiff'], a[href$='.gif']").each(function() {
-                var img = $('<img>',{src: this.href});
-                $(this).replaceWith(img);
-            });
-            // youtube
-            $thread.find('a').each(function() {
-                var yturl= /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?([\w\-]{10,12})(?:&feature=related)?(?:[\w\-]{0})?/g;
-                var ytplayer= '<iframe width="320" height="240" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>';
-
-                var url = $(this).attr('href');
-                if (url !== null) {
-                    var matches = url.match(yturl);
-                    if (matches) {
-                        var embed = $(this).attr('href').replace(yturl, ytplayer);
-                        var iframe = $(embed);
-
-                        iframe.insertAfter(this);
-                        $(this).remove();
-                    }
-                }
-            });
-
-
-            $thread.find('br').remove();
-
-            $thread.find('div.post').addClass('well well-small');
-            $('#thread-title').text(title);
-            //$('.modal-body').append($thread);
-            $('#thread-content').html($thread);
-            $('#thread-wrapper').show();
-        });
-
+        renderThread( url );
     });
     return $threads;
 }
 
+function renderThread( url ) {
+
+    window.scrollTo(0, 0);
+    $('#thread-wrapper').hide();
+    $.get(url, function( response ) {
+        var title = $(response).find('.topic_header').text();
+        var $thread = $(response).find('#boards_ajax_container');
+        // get reply form
+        var $reply_form = $(response).find('#new_post').addClass('well');
+        $reply_form.find('#post_submit, .post_instructions').remove();
+        $reply_form.append('<input type="submit" id="submit-button" class="btn btn-large btn-primary" value="Reply" />');
+        // reply form
+        $reply_form.submit(function(event) {
+            event.preventDefault();
+            $form = $(this);
+            $form.find("input[type=submit]").attr("disabled", "disabled");
+            // submit through ajax
+            var submit_url = $form.attr('action');
+            var data = $form.serialize();
+            $.post(submit_url, data).done(function( data ) {
+                console.log("posted");
+                renderThread( submit_url );
+            });
+        });
+
+
+        // insert form
+        $('#reply-form-wrapper').html($reply_form);
+        $thread.find('div.topic_header, span.post_tools, div.posts_footer').remove();
+        var $names = $thread.find('span.poster_name');
+        $names.html(function(index, html) {
+            return html.replace('»', '');
+        });
+        // links to images
+        $thread.find("a[href$='.png'], a[href$='.jpg'], a[href$='.tiff'], a[href$='.gif']").each(function() {
+            var img = $('<img>',{src: this.href});
+            $(this).replaceWith(img);
+        });
+        // youtube
+        $thread.find('a').each(function() {
+            var yturl= /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?([\w\-]{10,12})(?:&feature=related)?(?:[\w\-]{0})?/g;
+            var ytplayer= '<iframe width="320" height="240" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>';
+
+            var url = $(this).attr('href');
+            if (url !== null) {
+                var matches = url.match(yturl);
+                if (matches) {
+                    var embed = $(this).attr('href').replace(yturl, ytplayer);
+                    var iframe = $(embed);
+
+                    iframe.insertAfter(this);
+                    $(this).remove();
+                }
+            }
+        });
+
+
+        $thread.find('br').remove();
+
+        $thread.find('div.post').addClass('well well-small');
+        $('#thread-title').text(title);
+        //$('.modal-body').append($thread);
+        $('#thread-content').html($thread);
+        $('#thread-wrapper').show();
+    });
+}
 
 function getMyThreadsList() {
     return $.get( PT_ENDPOINT + 'topics?mode=my_threads').pipe(function( my_threads ) {
