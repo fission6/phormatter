@@ -65,10 +65,15 @@
         </div>
         <div class="span6" id="thread-wrapper" style="display:none;">
             <div class="row-fluid">
-
                 <div class="span12">
                     <h3 id="thread-title"></h3>
-                    <div id="thread-content">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a href="#thread-content" data-toggle="tab">Latest Page</a></li>
+                      <li><a href="#thread-entire-content" data-toggle="tab">Everything</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="thread-content"></div>
+                        <div class="tab-pane" id="thread-entire-content"></div>
                     </div>
                 </div>
             </div>

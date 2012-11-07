@@ -54,8 +54,11 @@ $(document).ready(function() {
         getMyThreads();
     });
 
-
-
+    /* entire tab
+    $('a[data-toggle="tab"]').on('shown', function (e) {
+      console.log(e.target); // activated tab
+      console.log(e.relatedTarget); // previous tab
+    });*/
 
 
 });
@@ -102,16 +105,52 @@ function parseThreads( threads ) {
         var url = $(this).attr('href');
         console.log(url);
         renderThread( url );
+        renderEntireThread( url );
     });
     return $threads;
 }
+
+
+function renderEntireThread( url ) {
+
+    $.get( url + '?mode=print').done( function( response ) {
+        var $thread = $(response).find('table').addClass('table table-striped').first();
+        // remove first
+        $thread.find('.topic_header').remove();
+        $thread.find('div.topic_header, span.post_tools, div.posts_footer').remove();
+        $thread.find("a[href$='.png'], a[href$='.jpg'], a[href$='.tiff'], a[href$='.gif']").each(function() {
+            var img = $('<img>',{src: this.href});
+            $(this).replaceWith(img);
+        });
+        // youtube
+        $thread.find('a').each(function() {
+            var yturl= /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?([\w\-]{10,12})(?:&feature=related)?(?:[\w\-]{0})?/g;
+            var ytplayer= '<iframe width="320" height="240" src="http://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>';
+
+            var url = $(this).attr('href');
+            if (url !== null) {
+                var matches = url.match(yturl);
+                if (matches) {
+                    var embed = $(this).attr('href').replace(yturl, ytplayer);
+                    var iframe = $(embed);
+
+                    iframe.insertAfter(this);
+                    $(this).remove();
+                }
+            }
+        });
+        $('#thread-entire-content').html($thread);
+    });
+
+}
+
 
 function renderThread( url ) {
 
     window.scrollTo(0, 0);
     $('#thread-wrapper').hide();
     $.get(url, function( response ) {
-        var title = $(response).find('.topic_header').text();
+        var title = $(response).find('.topic_header').clone().children().remove().end().text();
         var $thread = $(response).find('#boards_ajax_container');
         // get reply form
         var $reply_form = $(response).find('#new_post').addClass('well');
@@ -134,7 +173,7 @@ function renderThread( url ) {
 
         // insert form
         $('#reply-form-wrapper').html($reply_form);
-        $thread.find('div.topic_header, span.post_tools, div.posts_footer').remove();
+        $thread.find('div.topic_header, .interior_pagination, span.post_tools, div.posts_footer').remove();
         var $names = $thread.find('span.poster_name');
         $names.html(function(index, html) {
             return html.replace('»', '');

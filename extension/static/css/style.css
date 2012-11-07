@@ -19,6 +19,17 @@ font-size: 15px;
     padding: 20px;
 }
 
+#thread-entire-content {
+    
+    overflow-y: auto;
+    padding: 20px;
+}
+
+#thread-entire-content th {
+    font-size: 12px;
+    font-weight: 400;
+}
+
 #threads {
     font-size: 14px;
 }
