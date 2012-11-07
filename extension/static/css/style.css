@@ -1,0 +1,24 @@
+#threadModal {
+top:40%;
+width: 700px;
+margin: -240px 0 0 -350px;
+}
+
+div.post {
+    background-color: white-smoke;
+    overflow-x: auto;
+}
+
+#thread-wrapper {
+font-size: 15px;
+}
+
+#thread-content {
+    
+    overflow-y: auto;
+    padding: 20px;
+}
+
+#threads {
+    font-size: 14px;
+}
