@@ -1,3 +1,5 @@
+This is a Beta, meaning functionality is limited
+
 - Installation 
 * note if you already have a version of the plugin installed, please remove it first in chrome://chrome/extensions/
 by clicking on the little trash can icon by the respective Phormatter plugin. Also be sure that Chrome is as
@@ -20,3 +22,4 @@ currently beta functionality:
 4. can post a reply to a thread / can not create new threads yet 
 5. displays photos and you tubes "inline" (meaning right in the page, so be careful for NSFW)
 6. My favorite, hit the space bar to update threads.
+7. Tabs to show the current page, or an "Everything" to show the entire thread.
