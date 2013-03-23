@@ -5,7 +5,7 @@ This is a Beta, meaning functionality is limited
 by clicking on the little trash can icon by the respective Phormatter plugin. Also be sure that Chrome is as
 up to date as possible in terms of versioning.
 
-1. click or visit https://github.com/fission6/phormatter/blob/master/phormatter.crx to download extension
+1. click or visit https://github.com/fission6/phormatter/raw/master/phormatter.crx to download extension
 2. open the following url in chrome chrome://chrome/extensions/
 3. drag and drop the downloaded extension in step 1 into the page offered by step 2.
 
