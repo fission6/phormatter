@@ -139,9 +139,26 @@ function renderEntireThread( url ) {
                 }
             }
         });
+
+        // activate show setlist popover
+        options = {
+            content: getSetList
+        };
+        $thread.find('span.shows_tooltips').addClass('label label-warning');//.popover(options);
         $('#thread-entire-content').html($thread);
     });
 
+}
+
+function getSetList() {
+    console.log("Getting Setlist");
+    var $setlist = $(this);
+    var show_id = $setlist.attr('show_id');
+    $.get( 'http://phantasytour.com/shows/' + show_id + '/setlist' )
+    .done(function( response ) {
+
+         $setlist.popover({content:response}).popover('show');
+    });
 }
 
 
@@ -203,7 +220,17 @@ function renderThread( url ) {
 
         $thread.find('div.post').addClass('well well-small');
         $('#thread-title').text(title);
-        //$('.modal-body').append($thread);
+        // activate show setlist popover
+        options = {
+            trigger: "hover",
+            title: "hello",
+            content: getSetList
+        };
+        $thread.find('span.shows_tooltips').addClass('label label-warning').hover(
+            getSetList,
+            function() {
+                $(this).popover('hide');
+            });
         $('#thread-content').html($thread);
         $('#thread-wrapper').show();
     });
