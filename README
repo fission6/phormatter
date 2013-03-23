@@ -5,9 +5,13 @@ This is a Beta, meaning functionality is limited
 by clicking on the little trash can icon by the respective Phormatter plugin. Also be sure that Chrome is as
 up to date as possible in terms of versioning.
 
+* this extension does not offer authentication, you will need to open a new tab and make sure you've signed into
+PT to ensure you have the authentication cookies needed.
+
 1. click or visit https://github.com/fission6/phormatter/raw/master/phormatter.crx to download extension
 2. open the following url in chrome chrome://chrome/extensions/
 3. drag and drop the downloaded extension in step 1 into the page offered by step 2.
+
 
 currently beta functionality:
 
